@@ -17,12 +17,15 @@ def main():
     key = libtcod.Key()
     mouse = libtcod.Mouse()
 
+    # Game loop
     while not libtcod.console_is_window_closed():
         libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS, key, mouse)
 
-        libtcod.console_set_default_foreground(0, libtcod.white)
-        libtcod.console_put_char(0, player_x, player_y, '@', libtcod.BKGND_NONE)
+        libtcod.console_set_default_foreground(con, libtcod.white)
+        libtcod.console_put_char(con, player_x, player_y, '@', libtcod.BKGND_NONE)
+        libtcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
         libtcod.console_flush()
+        libtcod.console_put_char(con, player_x, player_y, ' ', libtcod.BKGND_NONE)
 
         # Next line is deprecated
         # key = libtcod.console_check_for_keypress()
@@ -37,13 +40,12 @@ def main():
             dx, dy = move  # unpack the tuples
             player_x += dx
             player_y += dy
-        
+
         if exit:
             return True
-        
+
         if fullscreen:
             libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
-
 
 
 if __name__ == "__main__":
