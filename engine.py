@@ -9,7 +9,7 @@ def main():
     player_x = int(screen_width / 2)
     player_y = int(screen_height / 2)
 
-    libtcod.console_set_custom_font('resouces/arial10x10.png',libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
+    libtcod.console_set_custom_font('resouces/arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
     libtcod.console_init_root(screen_width, screen_height, 'Rogue-like Mini-game', False)
 
     con = libtcod.console_new(screen_width, screen_height)
@@ -24,8 +24,11 @@ def main():
         libtcod.console_set_default_foreground(con, libtcod.white)
         libtcod.console_put_char(con, player_x, player_y, '@', libtcod.BKGND_NONE)
         libtcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
+        # Next line will print your whole setup (e.g. 3 lines above)
         libtcod.console_flush()
-        libtcod.console_put_char(con, player_x, player_y, ' ', libtcod.BKGND_NONE)
+        # Next line is pretty tricky.
+        # It will be saved till next loop, and be printed by tcod.console_flush()
+        libtcod.console_put_char(con, player_x, player_y, ' ', libtcod.BKGND_NONE)  # Override previous @
 
         # Next line is deprecated
         # key = libtcod.console_check_for_keypress()
