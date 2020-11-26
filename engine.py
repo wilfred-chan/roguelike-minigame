@@ -1,6 +1,8 @@
 import tcod as libtcod
+
 from entity import Entity
 from input_handlers import handle_keys
+from render_functions import render_all, clear_all
 
 
 def main():
@@ -23,15 +25,12 @@ def main():
     while not libtcod.console_is_window_closed():
         libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS, key, mouse)
 
-        libtcod.console_set_default_foreground(con, libtcod.white)
-        libtcod.console_put_char(con, player.x, player.y, '@', libtcod.BKGND_NONE)
-        libtcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
-        # Next line will print your whole setup (e.g. 3 lines above)
+        render_all(con, entities, screen_width, screen_height)
+        # Next line will print your whole setup (e.g. the line above)
         libtcod.console_flush()
         # Next line is pretty tricky.
         # It will be saved till next loop, and be printed by tcod.console_flush()
-        libtcod.console_put_char(con, player.x, player.y, ' ', libtcod.BKGND_NONE)  # Override previous @
-
+        clear_all(con, entities)
         # Next line is deprecated
         # key = libtcod.console_check_for_keypress()
         action = handle_keys(key)
