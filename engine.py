@@ -52,7 +52,7 @@ def main():
 
         if move:
             dx, dy = move  # unpack the tuples
-            if not game_map.tiles[player.x + dx][player.y + dy].blocked:
+            if not game_map.is_blocked(player.x + dx, player.y + dy):
                 player.move(dx, dy)
 
         if exit:
