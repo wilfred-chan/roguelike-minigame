@@ -33,8 +33,8 @@ def main():
         # Next lines use dict.get() method to get the movement tuples
         # or boolean values from the dictionaries
         move = action.get('move')  # tuples
-        exit = action.get('exit')  # True
-        fullscreen = action.get('fullscreen')  # True
+        exit = action.get('exit')  # {'exit': True}
+        fullscreen = action.get('fullscreen')  # {'fullscreen': True}
 
         if move:
             dx, dy = move  # unpack the tuples
