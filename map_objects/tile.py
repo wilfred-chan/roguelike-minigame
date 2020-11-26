@@ -1,4 +1,4 @@
-class Title:
+class Tile:
     """
     A tile obj on a map.
     """

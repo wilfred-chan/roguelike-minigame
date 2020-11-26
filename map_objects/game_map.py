@@ -1,4 +1,4 @@
-from map_objects import Tile
+from map_objects.tile import Tile
 
 
 class GameMap:
@@ -18,9 +18,8 @@ class GameMap:
         tiles[30][22].blocked = True
         tiles[30][22].block_sight = True
         tiles[31][22].blocked = True
-        tiles[31][22].blocked = True
-        tiles[32][22].block_sight = True
+        tiles[31][22].block_sight = True
+        tiles[32][22].blocked = True
         tiles[32][22].block_sight = True
 
         return tiles
-
