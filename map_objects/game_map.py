@@ -42,7 +42,11 @@ class GameMap:
 
     def make_map(self, player):
         """
-        Usage: Call create_room() method to generate rooms(grounds).
+        Usage:
+            Generate inter-connected rooms.
+        Param:
+            player(Entity obj): an Entity object to be updated with
+            initial position of player
         """
         rooms_created = []
         # Generating rooms
