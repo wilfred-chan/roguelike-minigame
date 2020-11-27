@@ -3,14 +3,31 @@ from map_objects.rectangle import Rect
 
 
 class GameMap:
+    """
+    Usage:
+        Build a GameMap object.
+    Attributes:
+        width(int), height(int).
+    """
     def __init__(self, width, height):
+        """
+        Usage:
+            Initialize the GameMap object with full of wall tiles.
+        Params:
+            width(int), height(int).
+        """
         self.width = width
         self.height = height
         self.tiles = self.initialize_tiles()
 
     def initialize_tiles(self):
-        # Initialize a 2d array of width * height
-        # The initial map is full of walls to prepare for generating man
+        """
+        Usage:
+            Initialize tiles in the map, via a 2d array of width * height.
+            Return a 2d array of Tile objects.
+        """
+        # The initial map is full of walls
+        # to prepare for generating rooms(grounds)
         tiles = [[Tile(True) for y in range(self.height)]
                  for x in range(self.width)]
         return tiles
@@ -19,15 +36,23 @@ class GameMap:
         """
         Usage: Call create_room() method to generate rooms(grounds).
         """
-        room1 = Rect(20, 15, 20, 10)
-        room2 = Rect(30, 20, 10, 20)
+        room1 = Rect(25, 15, 20, 15)
+        room2 = Rect(45, 20, 20, 25)
+        room3 = Rect(5, 5, 40, 10)
+        room4 = Rect(5, 25, 10, 20)
+        room5 = Rect(70, 20, 10, 25)
+        room6 = Rect(30, 5, 10, 10)
         self.create_room(room1)
         self.create_room(room2)
+        self.create_room(room3)
+        self.create_room(room4)
+        self.create_room(room5)
+        self.create_room(room6)
 
     def create_room(self, room):
         """
-        Usage: Creating grounds for the player to walk in the game map.
-
+        Usage:
+            Create a room for the player to walk in the game map.
         Params:
             room: a Rect object from map_objects.rectangle.
         """

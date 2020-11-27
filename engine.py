@@ -58,8 +58,6 @@ def main():
         # It will be saved till next loop,
         # and be printed by tcod.console_flush()
         clear_all(con, entities)
-        # Next line is deprecated
-        # key = libtcod.console_check_for_keypress()
         action = handle_keys(key)
         # Next lines use dict.get() method to get the movement tuples
         # or boolean values from the dictionaries

@@ -1,6 +1,11 @@
 class Entity:
     """
-    A generic object to represent players, enimies, items, etc.
+    Usage:
+        A generic object to represent players, enimies, items, etc.
+    Attributes:
+        x(int), y(int): the coordinate of current entity
+        char: the character to represent current entity
+        color: the color of the character on the console
     """
     def __init__(self, x, y, char, color):
         self.x = x

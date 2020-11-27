@@ -22,15 +22,36 @@ def render_all(con, entities, game_map, screen_width, screen_height, colors):
 
 
 def clear_all(con, entities):
+    """
+    Usage:
+        Clear all entities on the map.
+    Params:
+        con: tcod.console object
+        entities(list): a list of Entity class
+    """
     for entity in entities:
         clear_entity(con, entity)
 
 
 def draw_entity(con, entity):
+    """
+    Usage:
+        Print the entity on the map.
+    Params:
+        con: tcod.console object
+        entity: an Entity obj
+    """
     libtcod.console_set_default_foreground(con, entity.color)
     libtcod.console_put_char(con, entity.x, entity.y,
                              entity.char, libtcod.BKGND_NONE)
 
 
 def clear_entity(con, entity):
+    """
+    Usage:
+        Print ' ' to override the entity on the map.
+    Params:
+        con: tcod.console object
+        entity: an Entity obj
+    """
     libtcod.console_put_char(con, entity.x, entity.y, ' ', libtcod.BKGND_NONE)
