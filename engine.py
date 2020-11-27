@@ -1,5 +1,6 @@
 import tcod as libtcod
 
+from components.fighter import Fighter
 from entity import Entity, get_blocking_entity
 from fov_functions import initialize_fov, recompute_fov
 from game_states import GameStates
@@ -24,8 +25,12 @@ def main():
     }
 
     # Initialize player and entities list
-    player = Entity(int(screen_width / 2), int(screen_height / 2),
-                    '@', libtcod.white, 'player', blocks=True)
+    fighter_component = Fighter(hp=10, defense=2, power=5)
+    player = Entity(
+        int(screen_width / 2), int(screen_height / 2),
+        '@', libtcod.white, 'player', blocks=True,
+        fighter=fighter_component, ai=None
+    )
     entities = [player]
 
     # Initialize default font & window title
@@ -104,12 +109,11 @@ def main():
             libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
 
         if game_state == GameStates.ENEMY_TURN:
+            # Let every enemy to do something in thier turn!
             for entity in entities:
-                if entity != player:
-                    print(
-                        'The {} looks at you. And moves.'.format(entity.name)
-                    )
-                    game_state = GameStates.PLAYER_TURN
+                if entity.ai:  # skip player as no ai attribute
+                    entity.ai.take_turn(player, fov_map, game_map, entities)
+            game_state = GameStates.PLAYER_TURN
 
 
 if __name__ == "__main__":

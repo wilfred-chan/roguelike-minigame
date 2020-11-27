@@ -1,6 +1,10 @@
 import tcod as libtcod
 
+from components.fighter import Fighter
+from components.ai import BasicMonster
+
 from entity import Entity
+
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
 from random import randint
@@ -172,23 +176,29 @@ class GameMap:
                     overlap = True
             if not overlap:
                 if randint(0, 100) < 75:
+                    fighter_component = Fighter(5, 0, 1)
+                    ai_component = BasicMonster()
                     monster = Entity(
-                        x, y, 's',
+                        x, y, 'S',
                         libtcod.desaturated_green,
-                        'Slime', blocks=True
+                        'Slime', blocks=True,
+                        fighter=fighter_component, ai=ai_component
                     )
                 else:
+                    fighter_component = Fighter(10, 1, 2)
+                    ai_component = BasicMonster()
                     monster = Entity(
-                        x, y, 'o',
+                        x, y, 'O',
                         libtcod.darker_green,
-                        'Orc', blocks=True
+                        'Orc', blocks=True,
+                        fighter=fighter_component, ai=ai_component
                     )
                 entities.append(monster)
 
     def is_blocked(self, x, y):
         """
         Usage:
-            Return True if the tiles[x][y] is blocked.
+            Return True if the tiles[x][y] is blocked (by wall).
         Params:
             x(int): x coordinate in GameMap.tiles.
             y(int): y coordinate in GameMap.tiles.
