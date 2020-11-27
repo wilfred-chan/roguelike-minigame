@@ -1,6 +1,6 @@
 import tcod as libtcod
 
-from entity import Entity
+from entity import Entity, get_blocking_entity
 from fov_functions import initialize_fov, recompute_fov
 from input_handlers import handle_keys
 from map_objects.game_map import GameMap
@@ -18,16 +18,14 @@ def main():
     colors = {
         'dark_wall': libtcod.Color(0, 0, 100),
         'dark_ground': libtcod.Color(50, 50, 150),
-        # 'light_wall': libtcod.Color(130, 110, 50),
-        # 'light_ground': libtcod.Color(200, 180, 50)
+        'light_wall': libtcod.Color(130, 110, 50),
+        'light_ground': libtcod.Color(200, 180, 50)
     }
 
-    # Initialize player, npc, and other entities
+    # Initialize player and entities list
     player = Entity(int(screen_width / 2), int(screen_height / 2),
-                    '@', libtcod.white)
-    npc = Entity(int(screen_width / 2 - 5), int(screen_height / 2),
-                 '@', libtcod.yellow)
-    entities = [npc, player]
+                    '@', libtcod.white, 'player', blocks=True)
+    entities = [player]
 
     # Initialize default font & window title
     libtcod.console_set_custom_font(
@@ -43,12 +41,12 @@ def main():
 
     # Initialize the game map with the default size
     game_map = GameMap(map_width, map_height)
-    game_map.make_map(player)
+    game_map.make_map(player, entities, max_monsters_per_room=5)
 
     # Initialization of Filed of View
     fov_algorithm = 0
-    fov_light_walls = False
-    fov_radius = 10
+    fov_light_walls = True
+    fov_radius = 8
     fov_recompute = True
     fov_map = initialize_fov(game_map)
 
@@ -87,9 +85,14 @@ def main():
         if move:
             dx, dy = move  # unpack the tuples
             if not game_map.is_blocked(player.x + dx, player.y + dy):
-                player.move(dx, dy)
-
-                fov_recompute = True
+                blocking_entity = get_blocking_entity(
+                    entities, player.x + dx, player.y + dy
+                )
+                if blocking_entity is None:
+                    player.move(dx, dy)
+                    fov_recompute = True
+                else:
+                    print('You kicked {}!'.format(blocking_entity.name))
         if exit:
             return True
 

@@ -13,42 +13,42 @@ def render_all(con, entities, game_map, fov_map, fov_recompute,
                 explored = game_map.tiles[x][y].explored
                 # Uncomment below section if you want light in FOV
                 # ----------------------------------------------------
-                # if visible:  # Current tile is in FOV
-                #     if wall:
-                #         libtcod.console_set_char_background(
-                #             con, x, y, colors.get('light_wall'),
-                #             libtcod.BKGND_SET
-                #         )
-                #     else:
-                #         libtcod.console_set_char_background(
-                #             con, x, y, colors.get('light_ground'),
-                #             libtcod.BKGND_SET
-                #         )
-                # else:  # Current tile is out of POV
-                #     if wall:
-                #         libtcod.console_set_char_background(
-                #             con, x, y, colors.get('dark_wall'),
-                #             libtcod.BKGND_SET
-                #         )
-                #     else:
-                #         libtcod.console_set_char_background(
-                #             con, x, y, colors.get('dark_ground'),
-                #             libtcod.BKGND_SET
-                #         )
+                if visible:  # Current tile is in FOV
+                    if wall:
+                        libtcod.console_set_char_background(
+                            con, x, y, colors.get('light_wall'),
+                            libtcod.BKGND_SET
+                        )
+                    else:
+                        libtcod.console_set_char_background(
+                            con, x, y, colors.get('light_ground'),
+                            libtcod.BKGND_SET
+                        )
+                else:  # Current tile is out of POV
+                    if wall and explored:
+                        libtcod.console_set_char_background(
+                            con, x, y, colors.get('dark_wall'),
+                            libtcod.BKGND_SET
+                        )
+                    elif (not wall) and explored:
+                        libtcod.console_set_char_background(
+                            con, x, y, colors.get('dark_ground'),
+                            libtcod.BKGND_SET
+                        )
                 # ----------------------------------------------------
 
                 # Comment out below section if you want light in FOV
                 # ----------------------------------------------------
-                if wall and explored:
-                    libtcod.console_set_char_background(
-                        con, x, y, colors.get('dark_wall'),
-                        libtcod.BKGND_SET
-                    )
-                elif (not wall) and explored:
-                    libtcod.console_set_char_background(
-                        con, x, y, colors.get('dark_ground'),
-                        libtcod.BKGND_SET
-                    )
+                # if wall and explored:
+                #     libtcod.console_set_char_background(
+                #         con, x, y, colors.get('dark_wall'),
+                #         libtcod.BKGND_SET
+                #     )
+                # elif (not wall) and explored:
+                #     libtcod.console_set_char_background(
+                #         con, x, y, colors.get('dark_ground'),
+                #         libtcod.BKGND_SET
+                #     )
 
     # Print all entities in the list
     for entity in entities:

@@ -1,3 +1,6 @@
+import tcod as libtcod
+
+from entity import Entity
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
 from random import randint
@@ -40,10 +43,10 @@ class GameMap:
                  for x in range(self.width)]
         return tiles
 
-    def make_map(self, player):
+    def make_map(self, player, entities, max_monsters_per_room):
         """
         Usage:
-            Generate inter-connected rooms.
+            Generate inter-connected rooms and monsters.
         Param:
             player(Entity obj): an Entity object to be updated with
             initial position of player
@@ -69,6 +72,8 @@ class GameMap:
         player.x, player.y = rooms_created[0].center()
         # Generating rooms
         for idx in range(len(rooms_created)):
+            self.place_entities(rooms_created[idx], entities,
+                                max_monsters_per_room)
             if idx == (len(rooms_created) - 1):
                 self.connect_rooms(rooms_created[idx], rooms_created[0])
             else:
@@ -79,7 +84,7 @@ class GameMap:
         Usage:
             Create a room for the player to walk in the game map.
         Params:
-            room: a Rect object from map_objects.rectangle.
+            room(Rect obj): a Rect object from map_objects.rectangle.
         """
         # carve out a walkable rectangle (inner) in the map of walls
         # reason why don't add 1 to x2 & y2 is because
@@ -141,6 +146,44 @@ class GameMap:
         for y in range(y1, y2+1):
             self.tiles[x][y].blocked = False
             self.tiles[x][y].block_sight = False
+
+    def place_entities(self, room, entities, max_monsters_per_room):
+        """
+        Usage:
+            Randomly place random number of monsters in a room.
+            And store them into list entities.
+        Params:
+            room(Rect obj): a Rect object from map_objects.rectangle.
+            entities(list): A list of Entity object.
+            max_monsters_per_room(int): literally.
+        """
+        # Place random number of monsters
+        number_of_monsters = randint(0, max_monsters_per_room)
+
+        for i in range(number_of_monsters):
+            # Choose a random position
+            # 2 lines below can avoid monster-in-wall
+            x = randint(room.x1 + 1, room.x2 - 1)
+            y = randint(room.y1 + 1, room.y2 - 1)
+
+            overlap = False
+            for entity in entities:
+                if x == entity.x and y == entity.y:
+                    overlap = True
+            if not overlap:
+                if randint(0, 100) < 75:
+                    monster = Entity(
+                        x, y, 's',
+                        libtcod.desaturated_green,
+                        'Slime', blocks=True
+                    )
+                else:
+                    monster = Entity(
+                        x, y, 'o',
+                        libtcod.darker_green,
+                        'Orc', blocks=True
+                    )
+                entities.append(monster)
 
     def is_blocked(self, x, y):
         """
