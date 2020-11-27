@@ -7,22 +7,26 @@ from render_functions import render_all, clear_all
 
 
 def main():
+    # Initialize default windows & map sizes
     screen_width = 80
     screen_height = 50
     map_width = 80
     map_height = 45
 
+    # Initialize default colors of wall & ground
     colors = {
         'dark_wall': libtcod.Color(0, 0, 100),
         'dark_ground': libtcod.Color(50, 50, 150)
     }
 
+    # Initialize player, npc, and other entities
     player = Entity(int(screen_width / 2), int(screen_height / 2),
                     '@', libtcod.white)
     npc = Entity(int(screen_width / 2 - 5), int(screen_height / 2),
                  '@', libtcod.yellow)
     entities = [npc, player]
 
+    # Initialize default font & window title
     libtcod.console_set_custom_font(
         'resouces/arial10x10.png',
         libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD
@@ -31,9 +35,12 @@ def main():
         screen_width, screen_height, 'Rogue-like Mini-game', False
     )
 
+    # Initialize the console windows for gaming
     con = libtcod.console_new(screen_width, screen_height)
 
+    # Initialize the game map with the default size
     game_map = GameMap(map_width, map_height)
+    game_map.make_map()
 
     key = libtcod.Key()
     mouse = libtcod.Mouse()
