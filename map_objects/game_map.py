@@ -1,5 +1,6 @@
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
+from random import randint
 
 
 class GameMap:
@@ -8,6 +9,13 @@ class GameMap:
         Build a GameMap object.
     Attributes:
         width(int), height(int).
+        tiles(list): sample tiles 2d array below.
+        [
+            |-------------------height(y)----------------|  ___
+           0[Tile(..),Tile(..),Tile(..),Tile(..),Tile(..)]   |
+           1[Tile(..),Tile(..),Tile(..),Tile(..),Tile(..)], width(x)
+           2[Tile(..),Tile(..),Tile(..),Tile(..),Tile(..)], _|_
+        ]      0        1        2        3        4
     """
     def __init__(self, width, height):
         """
@@ -36,18 +44,23 @@ class GameMap:
         """
         Usage: Call create_room() method to generate rooms(grounds).
         """
-        room1 = Rect(25, 15, 20, 15)
-        room2 = Rect(45, 20, 20, 25)
-        room3 = Rect(5, 5, 40, 10)
-        room4 = Rect(5, 25, 10, 20)
-        room5 = Rect(70, 20, 10, 25)
-        room6 = Rect(30, 5, 10, 10)
-        self.create_room(room1)
-        self.create_room(room2)
-        self.create_room(room3)
-        self.create_room(room4)
-        self.create_room(room5)
-        self.create_room(room6)
+        rooms_created = []
+
+        for rm in range(8+1):  # Generate 8 rooms
+            # random width & height
+            w = randint(5, 20)
+            h = randint(5, 20)
+            # random left-top point
+            x = randint(1, self.width - w - 1)
+            y = randint(1, self.height - h - 1)
+            new_room = Rect(x, y, w, h)
+            intersection_count = 0
+            for other_room in rooms_created:
+                if new_room.is_intersected(other_room):
+                    intersection_count += 1
+            if intersection_count == 0:
+                self.create_room(new_room)
+                rooms_created.append(new_room)
 
     def create_room(self, room):
         """
@@ -63,6 +76,38 @@ class GameMap:
             for y in range(room.y1 + 1, room.y2):
                 self.tiles[x][y].blocked = False
                 self.tiles[x][y].block_sight = False
+
+    def create_horizontal_tunnel(self, x1, x2, y):
+        """
+        Usage:
+            Create horizontal tunnels between rectangles.
+        Params:
+            x1, x2(int): two coordinates of width.
+            y(int): the coordinate of height.
+        """
+        if x1 > x2:
+            temp = x1
+            x1 = x2
+            x2 = temp
+        for x in range(x1, x2+1):
+            self.tiles[x][y].blocked = False
+            self.tiles[x][y].block_sight = False
+
+    def create_vertical_tunnel(self, y1, y2, x):
+        """
+        Usage:
+            Create vertical tunnels between rectangles.
+        Params:
+            y1, y2(int): two coordinates of width.
+            x(int): the coordinate of height.
+        """
+        if y1 > y2:
+            temp = y1
+            y1 = y2
+            y2 = temp
+        for y in range(y1, y2+1):
+            self.tiles[x][y].blocked = False
+            self.tiles[x][y].block_sight = False
 
     def is_blocked(self, x, y):
         """
