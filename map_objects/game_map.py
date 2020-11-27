@@ -9,7 +9,7 @@ class GameMap:
         Build a GameMap object.
     Attributes:
         width(int), height(int).
-        tiles(list): sample tiles 2d array below.
+        tiles(list): sample tiles (2d array) below.
         [
             |-------------------height(y)----------------|  ___
            0[Tile(..),Tile(..),Tile(..),Tile(..),Tile(..)]   |
@@ -40,13 +40,13 @@ class GameMap:
                  for x in range(self.width)]
         return tiles
 
-    def make_map(self):
+    def make_map(self, player):
         """
         Usage: Call create_room() method to generate rooms(grounds).
         """
         rooms_created = []
-
-        for rm in range(8+1):  # Generate 8 rooms
+        # Generating rooms
+        for rm in range(15+1):  # Generate 15 rooms (if no intersection)
             # random width & height
             w = randint(5, 20)
             h = randint(5, 20)
@@ -61,6 +61,14 @@ class GameMap:
             if intersection_count == 0:
                 self.create_room(new_room)
                 rooms_created.append(new_room)
+        # Update player's initial positioa
+        player.x, player.y = rooms_created[0].center()
+        # Generating rooms
+        for idx in range(len(rooms_created)):
+            if idx == (len(rooms_created) - 1):
+                self.connect_rooms(rooms_created[idx], rooms_created[0])
+            else:
+                self.connect_rooms(rooms_created[idx], rooms_created[idx+1])
 
     def create_room(self, room):
         """
@@ -76,6 +84,27 @@ class GameMap:
             for y in range(room.y1 + 1, room.y2):
                 self.tiles[x][y].blocked = False
                 self.tiles[x][y].block_sight = False
+
+    def connect_rooms(self, room1, room2):
+        """
+        Usage:
+            Creating tunnels between two rooms.
+        Params:
+            room1, room2(Rect obj): two non-intersected Rect objects.
+        """
+        room1_center_x, room1_center_y = room1.center()
+        room2_center_x, room2_center_y = room2.center()
+        order = randint(0, 1)
+        if order == 0:
+            self.create_horizontal_tunnel(room1_center_x, room2_center_x,
+                                          room1_center_y)
+            self.create_vertical_tunnel(room1_center_y, room2_center_y,
+                                        room2_center_x)
+        else:
+            self.create_vertical_tunnel(room1_center_y, room2_center_y,
+                                        room1_center_x)
+            self.create_horizontal_tunnel(room1_center_x, room2_center_x,
+                                          room2_center_y)
 
     def create_horizontal_tunnel(self, x1, x2, y):
         """

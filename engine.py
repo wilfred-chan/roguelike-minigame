@@ -40,7 +40,7 @@ def main():
 
     # Initialize the game map with the default size
     game_map = GameMap(map_width, map_height)
-    game_map.make_map()
+    game_map.make_map(player)
 
     key = libtcod.Key()
     mouse = libtcod.Mouse()
