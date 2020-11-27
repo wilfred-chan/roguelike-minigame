@@ -2,6 +2,7 @@ import tcod as libtcod
 
 from entity import Entity, get_blocking_entity
 from fov_functions import initialize_fov, recompute_fov
+from game_states import GameStates
 from input_handlers import handle_keys
 from map_objects.game_map import GameMap
 from render_functions import render_all, clear_all
@@ -54,6 +55,8 @@ def main():
     key = libtcod.Key()
     mouse = libtcod.Mouse()
 
+    game_state = GameStates.PLAYER_TURN
+
     # Game loop
     while not libtcod.console_is_window_closed():
         libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS, key, mouse)
@@ -82,7 +85,7 @@ def main():
         exit = action.get('exit')  # {'exit': True}
         fullscreen = action.get('fullscreen')  # {'fullscreen': True}
 
-        if move:
+        if move and (game_state == GameStates.PLAYER_TURN):
             dx, dy = move  # unpack the tuples
             if not game_map.is_blocked(player.x + dx, player.y + dy):
                 blocking_entity = get_blocking_entity(
@@ -91,13 +94,22 @@ def main():
                 if blocking_entity is None:
                     player.move(dx, dy)
                     fov_recompute = True
+                    game_state = GameStates.ENEMY_TURN
                 else:
-                    print('You kicked {}!'.format(blocking_entity.name))
+                    print('You kick the {}!'.format(blocking_entity.name))
         if exit:
             return True
 
         if fullscreen:
             libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
+
+        if game_state == GameStates.ENEMY_TURN:
+            for entity in entities:
+                if entity != player:
+                    print(
+                        'The {} looks at you. And moves.'.format(entity.name)
+                    )
+                    game_state = GameStates.PLAYER_TURN
 
 
 if __name__ == "__main__":
